@@ -1,0 +1,37 @@
+Sound Files:
+https://www.sounds-resource.com/xbox_360/minecraftxbox360edition/
+
+Some UI and image files:
+https://github.com/ZtechNetwork/MCBVanillaResourcePack/tree/master
+
+DONE:
+
+- Procedural Generation
+- Tree Generation
+- Noise Hill Generation 
+- Breaking/ Placing Blocks (only dirt is currently placable)
+
+WIP:
+
+- Inventory System
+- General UI and menus
+- World Saving and Loading Features
+
+FUTURE FEATURES:
+
+- Biomes
+- Water
+- Dynamic Lighting
+- Larger rendering/ faster rendering??
+- Less lag?
+- Droppable items/ drop blocks when broken
+- Crafting
+- Day/Night Cycles (sun & moon)
+- Weather Cycle
+- Savable worlds
+- Skins?
+- Lan or something (maybe not sure how though)
+- Mobs/ Entities
+- Creative/ Survival modes
+- Commands (? maybe not sure yet)
+- Add some blocks of your own

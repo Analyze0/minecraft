@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>Ticklecraft Beta</title>
+  <link rel="icon" type="image/png" href="assets/website/favicon.png">
+  <link href="styles/game.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+  <div id="coordinates">x: 0, y: 0, z: 0</div>
+  <div id="fps">FPS: 0</div>
+  <img src="assets/ui/crosshair.png" class="crosshair">
+
+  <div id="inventory" style="display: none;">
+    <div id="items">
+      <!-- Inventory items will be dynamically generated here -->
+    </div>
+  </div>
+
+  <div id="hotbar" class="hotbar">
+    <div id="item-one" class="item-one"></div>
+    <div id="item-two" class="item-two"></div>
+    <div id="item-three" class="item-three"></div>
+    <div id="item-four" class="item-four"></div>
+    <div id="item-five" class="item-five"></div>
+    <div id="item-six" class="item-six"></div>
+    <div id="item-seven" class="item-seven"></div>
+    <div id="item-eight" class="item-eight"></div>
+    <div id="item-nine" class="item-nine"></div>
+  </div>
+  
+  <div class="hand-3d-container">
+    <div id="hand-3d" class="hand-3d">
+      <div class="left"></div>
+      <div class="right"></div>
+    </div>
+  </div>
+
+  <img src="/assets/ui/hand.png" alt="" class="hand">
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/simplex-noise/2.4.0/simplex-noise.min.js"></script>
+  <script src="scripts/textures.js"></script>
+  <script src="scripts/game.js"></script>
+</body>
+
+</html>

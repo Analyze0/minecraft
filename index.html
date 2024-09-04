@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>Ticklecraft Beta</title>
+  <link rel="icon" type="image/png" href="assets/website/favicon.png">
+  <link href="styles/menu.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+  <img src="assets/ui/menu/title.png" draggable="false" class="title" id="title">
+  <div class="splashText" id="splashText"></div>
+  <div class="buttons" id="buttons">
+    <button class="play" id="play">Play Game</button>
+    <button class="settings" id="settings">Help  Options</button>
+    <button class="exit" id="exit">Exit Game</button>
+  </div>
+  <div class="panorama" id="panorama"></div>
+
+  <div class="preload-images">
+    <img src="assets/ui/gui/button_selected.png" alt="">
+    <img src="assets/ui/menu/worlds/worlds-menu-left.png" alt="">
+    <img src="assets/ui/menu/worlds/worlds-menu-center.png" alt="">
+    <img src="assets/ui/menu/worlds/worlds-menu-right.png" alt="">
+  </div>
+
+  <div class="loader" id="loader">
+    <img src="assets/ui/loading/esrb.png" id="esrb" draggable="false">
+    <img src="assets/ui/loading/xbox-live.png" id="xbox_live" draggable="false">
+    <img src="assets/ui/loading/microsoft-studios.png" id="microsoft_studios" draggable="false">
+    <img src="assets/ui/loading/mojang.png" id="mojang" draggable="false">
+    <img src="assets/ui/loading/4j-studios.png" id="4j_studios" draggable="false">
+  </div>
+
+  <div class="worlds-menu" id="worlds-menu">
+    <div class="menu-button-left" id="menu-button-left">
+      <p>Load</p>
+    </div>
+    <div class="menu-button-center" id="menu-button-center">
+      <p>Join</p>
+    </div>
+    <div class="menu-button-right" id="menu-button-right">
+      <p>Mini Games</p>
+    </div>
+    <div class="content" id="content">
+      <div class="new-world-btn" id="new-world-btn">
+        <p>Create New</p>
+      </div>
+      <div class="worlds-list" id="worlds-list">
+        <div class="world-item" id="Untitled_World">
+          <img src="assets/ui/menu/worlds/pack.png" alt="" id="world-icon">
+          <p class="name">Untitled World</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="new-world" id="new-world">
+    <p class="title">World Name</p>
+    
+    <input type="text" id="new-world-name" value="New World">
+    
+    <div id="gamemode-toggle" class="gamemode-toggle">
+      <p>Game Mode: Survival</p>
+    </div>
+
+    <div id="world-generation-toggle" class="world-generation-toggle">
+      <p>World Generation: Normal</p>
+    </div>
+
+    <button class="createWorld" id="createWorld">Create New World</button>
+    
+    <div class="texture-preview">
+      <div class="texture-name">
+        <img src="assets/ui/menu/worlds/default-texture-icon.png" id="texture-icon" class="texture-icon">
+        <p>Minecraft</p>
+      </div>
+      <p id="texture-description" class="texture-description">
+The classic Minecraft<br>textures, icons and user<br>interface!</p>
+      <div class="texture-pack-preview" id="texture-pack-preview"></div>
+    </div>
+  </div>
+
+  <img src="assets/ui/buttons/xbox_face_button_down.png" class="selectBtn">
+  <p class="select">Select</p>
+
+  <img src="assets/ui/buttons/xbox_face_button_right.png" class="backBtn">
+  <p class="back">Back</p>
+
+  <script src="scripts/menu.js"></script>
+</body>
+
+</html>
