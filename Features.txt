@@ -6,7 +6,7 @@ https://github.com/ZtechNetwork/MCBVanillaResourcePack/tree/master
 
 DONE:
 
-- Procedural Generation
+- Procedural Generation (not infinite but random)
 - Tree Generation
 - Noise Hill Generation 
 - Breaking/ Placing Blocks (only dirt is currently placable)
@@ -32,6 +32,6 @@ FUTURE FEATURES:
 - Skins?
 - Lan or something (maybe not sure how though)
 - Mobs/ Entities
-- Creative/ Survival modes
+- Creative/ Survival GAMEMODES
 - Commands (? maybe not sure yet)
 - Add some blocks of your own

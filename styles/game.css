@@ -186,3 +186,31 @@ canvas {
     bottom: -25px;
   }
 }
+
+.chat {
+  z-index: 1000;
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  width: 40%;
+  height: 40px;
+  border: 3px solid white;
+  background: black;
+  color: white;
+  opacity: 75%;
+  font-family: 'Mojangles', sans-serif;
+}
+
+.chat-logs {
+  z-index: 1000;
+  position: fixed;
+  bottom: 80px;
+  left: 20px;
+  width: 40%;
+  height: 50%;
+  border: 3px solid white;
+  background: black;
+  color: white;
+  opacity: 75%;
+  font-family: 'Mojangles', sans-serif;
+}

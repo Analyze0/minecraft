@@ -109,15 +109,15 @@ button {
   z-index: 100;
   width: 100%;
   height: 100%;
-  display: none;
   justify-content: center;
   align-items: center;
+  transition: 2s ease-in-out;
 }
 
 .loader img {
-  width: 75vw;
+  width: 50vw;
   position: absolute;
-  transition: opacity 1s ease-in-out;
+  transition: opacity 2s ease-in-out;
   opacity: 0;
 }
 

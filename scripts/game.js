@@ -561,6 +561,9 @@ document.addEventListener('DOMContentLoaded', () => {
             document.exitPointerLock();
             toggleInventory();
         }
+        if(event.code === 'KeyT') {
+            
+        }
     });
 
     function toggleInventory() {
