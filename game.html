@@ -25,7 +25,13 @@
   <input class="chat" id="chat"></input>
 
   <div id="hotbar" class="hotbar">
-    <div id="item-one" class="item-one"></div>
+    <div id="item-one" class="item-one">
+      <div class="hotbar-block">
+        <div class="hotbar-block-face hotbar-block-top"></div>
+        <div class="hotbar-block-face hotbar-block-left"></div>
+        <div class="hotbar-block-face hotbar-block-right"></div>
+      </div>
+    </div>
     <div id="item-two" class="item-two"></div>
     <div id="item-three" class="item-three"></div>
     <div id="item-four" class="item-four"></div>
@@ -34,7 +40,10 @@
     <div id="item-seven" class="item-seven"></div>
     <div id="item-eight" class="item-eight"></div>
     <div id="item-nine" class="item-nine"></div>
+    <div class="selected-slot" id="selected-slot"></div>
   </div>
+
+  <div class="xpbar" id="xpbar"></div>
   
   <div class="hand-3d-container">
     <div id="hand-3d" class="hand-3d">
@@ -44,6 +53,14 @@
   </div>
 
   <img src="/assets/ui/hand.png" alt="" class="hand">
+  <div class="held-block">
+    <div class="held-block-face held-block-top"></div>
+    <div class="held-block-face held-block-left"></div>
+    <div class="held-block-face held-block-right"></div>
+  </div>
+
+  <div class="overlay"></div>
+  <div class="deathscreen" id="deathscreen"></div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/simplex-noise/2.4.0/simplex-noise.min.js"></script>

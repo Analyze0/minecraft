@@ -1,5 +1,4 @@
-//Button Functionality:
-
+//Button Functionality
 document.getElementById('exit').onmousedown = function() {
   window.close();
 }
@@ -36,6 +35,13 @@ document.getElementById('createWorld').onmousedown = function(e) {
   window.location.href = '/game.html';
 }
 
+//Cursor
+
+document.onmousemove = function(e) {
+  document.getElementById('cursor').style.left = (e.clientX-25) + "px";
+  document.getElementById('cursor').style.top = (e.clientY-25) + "px";
+}
+
 //Panorama
 
 var x = 1;
@@ -49,7 +55,7 @@ function move() {
 setInterval(move, 18);
 
 const buttons = document.querySelectorAll('button');
-const clickSound = new Audio('assets/sound/ui/click.ogg');
+const clickSound = new Audio('/assets/sound/ui/click.ogg');
 
 buttons.forEach((button) => {
   button.addEventListener('click', () => {
@@ -91,8 +97,7 @@ document.addEventListener("DOMContentLoaded", function() {
   showNextLogo();
 });
 
-
-//Splash Text:
+//Splash Text
 
 const splashTexts = [
   '...!',
@@ -211,7 +216,7 @@ const splashTexts = [
 
 document.getElementById('splashText').innerHTML = splashTexts[Math.floor(Math.random() * splashTexts.length)];
 
-//World Menu Functionality:
+//World Menu Functionality
 
 document.getElementById('menu-button-left').onmousedown = function() {
   document.getElementById('worlds-menu').style.background = 'url(/assets/ui/menu/worlds/worlds-menu-left.png)';
@@ -228,7 +233,7 @@ document.getElementById('menu-button-right').onmousedown = function(e) {
   document.getElementById('worlds-menu').style.backgroundSize = '700px 647.5px';
 }
 
-//Making New Worlds Functionality:
+//Making New Worlds Functionality
 
 document.getElementById('gamemode-toggle').onmousedown = function(e) {
   const gamemodeToggle = document.getElementById('gamemode-toggle');

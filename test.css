@@ -1,0 +1,414 @@
+html {
+  cursor: pointer;
+  height: 100%;
+  width: 100%;
+}
+
+.head {
+  transform: rotateX(240deg) rotateY(0deg) rotateZ(130deg) translateY(55px) translateX(-65px);
+  z-index: 5;
+  transition: 0s;
+  opacity: 100%;
+  width: 200px;
+  height: 200px;
+  position: absolute;
+  top: 100px;
+  perspective: 600;
+  left: calc(50% - 100px);
+  transform-style: preserve-3d;
+}
+
+.head-side {
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  position: absolute;
+  border-radius: 0%;
+}
+
+.head-top {
+  image-rendering: pixelated;
+  transition: 2s ease-in;
+  transform: translateZ(-200px);
+  background-image: url(/assets/models/player/head_top.png);
+  background-size: 200px 200px;
+}
+
+.head-bottom {
+  transform: translateZ(-200px) translateX(-200px) rotateX(-90);
+  background: #383228;
+  background-size: 200px 200px;
+}
+
+.head-front {
+  transition: 2s ease-in;
+  image-rendering: pixelated;
+  transform: rotateX(90deg);
+  transform-origin: bottom;
+  background-image: url(/assets/models/player/head_front.png);
+  background-size: 200px 200px;
+}
+
+.head-back {
+  transition: 2s ease-in;
+  image-rendering: pixelated;
+  transform: translateY(-200px) rotateX(90deg);
+  transform-origin: bottom;
+  background-image: url(/assets/models/player/head_back.png);
+  background-size: 200px 200px;
+}
+
+.head-left {
+  transition: 2s ease-in;
+  image-rendering: pixelated;
+  width: 200px;
+  transform: translateZ(-100px) translateY(100px) rotateY(90deg) rotateZ(90deg);
+  transform-origin: right;
+  background-image: url(/assets/models/player/head_left.png);
+  background-size: 200px 200px;
+}
+
+.head-moreRight {
+  transition: 2s ease-in;
+  image-rendering: pixelated;
+  width: 200px;
+  transform: translateZ(-100px) translate(-200px) rotateX(90deg) rotateY(270deg) translateX(100px);
+  transform-origin: right;
+  background-image: url(/assets/models/player/head_right.png);
+  background-size: 200px 200px;
+}
+
+.torso {
+  transform: rotateX(240deg) rotateY(0deg) rotateZ(130deg) translateZ(53px);
+  z-index: 1;
+  transition: 0s;
+  opacity: 100%;
+  width: 200px;
+  height: 200px;
+  position: absolute;
+  top: 270px;
+  perspective: 600;
+  left: calc(50% - 100px);
+  transform-style: preserve-3d;
+}
+
+.torso-side {
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  position: absolute;
+  border-radius: 0%;
+}
+
+.torso-top {
+  height: 100px;
+  image-rendering: pixelated;
+  transition: 2s ease-in;
+  transform: translateZ(-200px) translateY(50px);
+  background-image: url(/assets/models/player/torso_top.png);
+  background-size: 200px 100px;
+}
+
+.torso-front {
+  height: 300px;
+  transition: 2s ease-in;
+  image-rendering: pixelated;
+  transform: rotateX(90deg) translateY(100px) translateZ(150px);
+  transform-origin: bottom;
+  background-image: url(/assets/models/player/torso_front.png);
+  background-size: 200px 300px;
+}
+
+.torso-back {
+  height: 300px;
+  transition: 2s ease-in;
+  image-rendering: pixelated;
+  transform: translateY(-250px) rotateX(90deg) translateY(100px);
+  transform-origin: bottom;
+  background-image: url(/assets/models/player/torso_back.png);
+  background-size: 200px 300px;
+}
+
+.torso-left {
+  z-index: 0;
+  height: 300px;
+  width: 100px;
+  transition: 2s ease-in;
+  image-rendering: pixelated;
+  transform: translateZ(-50px) rotateY(90deg) rotateZ(90deg) translateZ(100px);
+  transform-origin: right;
+  background-image: url(/assets/models/player/torso_side.png);
+  background-size: 100px 300px;
+}
+
+.torso-moreRight {
+  height: 300px;
+  width: 100px;
+  transition: 2s ease-in;
+  image-rendering: pixelated;
+  transform: translateZ(-50px) translate(-100px) rotateX(90deg) rotateY(270deg) translateX(100px);
+  transform-origin: right;
+  background-image: url(/assets/models/player/torso_side.png);
+  background-size: 100px 300px;
+}
+
+.leg-left {
+  transform: rotateX(240deg) rotateY(0deg) rotateZ(130deg) translateZ(300px);
+  z-index: 0;
+  transition: 0s;
+  opacity: 100%;
+  width: 200px;
+  height: 200px;
+  position: absolute;
+  top: 270px;
+  perspective: 600;
+  left: calc(50% - 100px);
+  transform-style: preserve-3d;
+}
+
+.leg-left-side {
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  position: absolute;
+  border-radius: 0%;
+}
+
+.leg-left-top {
+  height: 100px;
+  image-rendering: pixelated;
+  transition: 2s ease-in;
+  transform: translateZ(-200px) translateY(50px);
+  background-size: 200px 100px;
+}
+
+.leg-left-front {
+  height: 300px;
+  transition: 2s ease-in;
+  image-rendering: pixelated;
+  transform: rotateX(90deg) translateY(100px) translateZ(150px);
+  transform-origin: bottom;
+  background-image: url(/assets/models/player/leg_front.png);
+  background-size: 100px 300px;
+}
+
+.leg-left-back {
+  height: 300px;
+  transition: 2s ease-in;
+  image-rendering: pixelated;
+  transform: translateY(-250px) rotateX(90deg) translateY(100px);
+  transform-origin: bottom;
+  background-image: url(/assets/models/player/leg_back.png);
+  background-size: 200px 300px;
+}
+
+.leg-left-left {
+  height: 300px;
+  width: 100px;
+  transition: 2s ease-in;
+  image-rendering: pixelated;
+  transform: translateZ(-50px) rotateY(90deg) rotateZ(90deg) translateZ(100px);
+  transform-origin: right;
+  background-image: url(/assets/models/player/leg_left.png);
+  background-size: 100px 300px;
+}
+
+.leg-left-moreRight {
+  height: 300px;
+  width: 100px;
+  transition: 2s ease-in;
+  image-rendering: pixelated;
+  transform: translateZ(-50px) translate(-100px) rotateX(90deg) rotateY(270deg) translateX(0px) scaleX(-1);
+  transform-origin: right;
+  background-image: url(/assets/models/player/leg_left.png);
+  background-size: 100px 300px;
+}
+
+.arm-left {
+  transform: rotateX(240deg) rotateY(0deg) rotateZ(130deg) translateZ(53px) translateX(100px);
+  z-index: 1;
+  transition: 0s;
+  opacity: 100%;
+  width: 100px;
+  height: 200px;
+  position: absolute;
+  top: 270px;
+  perspective: 600;
+  left: calc(50% - 100px);
+  transform-style: preserve-3d;
+  animation: 5s bobTwo ease-in-out infinite;
+}
+
+.arm-left-side {
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  position: absolute;
+  border-radius: 0%;
+}
+
+.arm-left-top {
+  height: 100px;
+  image-rendering: pixelated;
+  transition: 2s ease-in;
+  transform: translateZ(-200px) translateY(13px) translateX(13px);
+  background-image: url(/assets/models/player/arm_top.png);
+  background-size: 200px 100px;
+}
+
+.arm-left-bottom {
+  height: 100px;
+  image-rendering: pixelated;
+  transition: 2s ease-in;
+  transform: translateZ(100px) translateY(13px) translateX(13px);
+  background-image: url(/assets/models/player/arm_bottom.png);
+  background-size: 200px 100px;
+}
+
+.arm-left-front {
+  height: 300px;
+  transition: 2s ease-in;
+  image-rendering: pixelated;
+  transform: rotateX(90deg) translateY(100px) translateZ(188px) translateX(15px);
+  transform-origin: bottom;
+  background-image: url(/assets/models/player/arm_front.png);
+  background-size: 100px 300px;
+}
+
+.arm-left-back {
+  height: 300px;
+  transition: 2s ease-in;
+  image-rendering: pixelated;
+  transform: translateY(-288px) rotateX(90deg) translateY(100px) translateX(18px);
+  transform-origin: bottom;
+  background-image: url(/assets/models/player/arm_front.png);
+  background-size: 100px 300px;
+}
+
+.arm-left-left {
+  z-index: 0;
+  height: 300px;
+  width: 100px;
+  transition: 2s ease-in;
+  image-rendering: pixelated;
+  transform: translateZ(-50px) rotateY(90deg) rotateZ(90deg) translateX(-40px) translateY(0px) translateZ(13px);
+  transform-origin: right;
+  background-image: url(/assets/models/player/arm_side.png);
+  background-size: 100px 300px;
+}
+
+.arm-right {
+  transform: rotateX(250deg) rotateY(0deg) rotateZ(130deg) translateZ(53px) translateX(-170px) rotateZ(180deg) translateY(75px);
+  z-index: 1;
+  transition: 0s;
+  opacity: 100%;
+  width: 100px;
+  height: 200px;
+  position: absolute;
+  top: 270px;
+  perspective: 600;
+  left: calc(50% - 100px);
+  transform-style: preserve-3d;
+  animation: 5s bob ease-in-out infinite;
+}
+
+.arm-right-side {
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  position: absolute;
+  border-radius: 0%;
+}
+
+.arm-right-top {
+  height: 100px;
+  image-rendering: pixelated;
+  transition: 2s ease-in;
+  transform: translateZ(-200px) translateY(13px) translateX(13px);
+  background-image: url(/assets/models/player/arm_top.png);
+  background-size: 200px 100px;
+}
+
+.arm-right-bottom {
+  height: 100px;
+  image-rendering: pixelated;
+  transition: 2s ease-in;
+  transform: translateZ(100px) translateY(13px) translateX(13px);
+  background-image: url(/assets/models/player/arm_bottom.png);
+  background-size: 200px 100px;
+}
+
+.arm-right-front {
+  height: 300px;
+  transition: 2s ease-in;
+  image-rendering: pixelated;
+  transform: rotateX(90deg) translateY(100px) translateZ(188px) translateX(15px);
+  transform-origin: bottom;
+  background-image: url(/assets/models/player/arm_front.png);
+  background-size: 100px 300px;
+}
+
+.arm-right-back {
+  height: 300px;
+  transition: 2s ease-in;
+  image-rendering: pixelated;
+  transform: translateY(-288px) rotateX(90deg) translateY(100px) translateX(18px);
+  transform-origin: bottom;
+  background-image: url(/assets/models/player/arm_front.png);
+  background-size: 100px 300px;
+}
+
+.arm-right-left {
+  z-index: 0;
+  height: 300px;
+  width: 100px;
+  transition: 2s ease-in;
+  image-rendering: pixelated;
+  transform: translateZ(-50px) rotateY(90deg) rotateZ(90deg) translateX(-40px) translateY(0px) translateZ(13px);
+  transform-origin: right;
+  background-image: url(/assets/models/player/arm_side.png);
+  background-size: 100px 300px;
+}
+
+.body {
+  transform: rotateY(0deg) rotateX(25deg) translateY(-100px);
+  z-index: 0;
+  transition: 0s;
+  opacity: 100%;
+  width: 200px;
+  height: 200px;
+  position: absolute;
+  top: 270px;
+  perspective: 600;
+  left: calc(50% - 100px);
+  transform-style: preserve-3d;
+}
+
+@keyframes bob {
+  0% {
+    transform: rotateX(250deg) rotateY(0deg) rotateZ(130deg) translateZ(53px) translateX(-170px) rotateZ(180deg) translateY(75px);
+  }
+  50% {
+    transform: rotateX(250deg) rotateY(5deg) rotateZ(130deg) translateZ(53px) translateX(-170px) rotateZ(180deg) translateY(80px);
+  }
+  100% {
+    transform: rotateX(250deg) rotateY(0deg) rotateZ(130deg) translateZ(53px) translateX(-170px) rotateZ(180deg) translateY(75px);
+  }
+}
+
+@keyframes bobTwo {
+  0% {
+    transform: rotateX(240deg) rotateY(0deg) rotateZ(130deg) translateZ(53px) translateX(100px);
+  }
+  50% {
+    transform: rotateX(240deg) rotateY(2deg) rotateZ(130deg) translateZ(45px) translateX(100px);
+  }
+  100% {
+    transform: rotateX(240deg) rotateY(0deg) rotateZ(130deg) translateZ(53px) translateX(100px);
+  }
+}

@@ -6,6 +6,7 @@ https://github.com/ZtechNetwork/MCBVanillaResourcePack/tree/master
 
 DONE:
 
+- Collision
 - Procedural Generation (not infinite but random)
 - Tree Generation
 - Noise Hill Generation 

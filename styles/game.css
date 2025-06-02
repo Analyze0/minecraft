@@ -5,6 +5,7 @@
 
 body,
 html {
+  cursor: url('/assets/ui/cursor.cur') !important;
   user-select: none;
   font-family: 'Mojangles', sans-serif;
   margin: 0;
@@ -18,6 +19,32 @@ canvas {
   display: block;
   width: 100%;
   height: 100%;
+}
+
+.overlay {
+  display: flex;
+  top: 0px;
+  left: 0px;
+  position: fixed;
+  background: white;
+  opacity: 25%;
+  z-index: 100;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.deathscreen {
+  display: none;
+  top: 0px;
+  left: 0px;
+  position: fixed;
+  background: rgb(54, 1, 1);
+  opacity: 90%;
+  z-index: 100;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
 }
 
 #coordinates {
@@ -52,7 +79,6 @@ canvas {
   pointer-events: none;
 }
 
-
 #inventory {
   display: flex;
   flex-direction: column;
@@ -63,6 +89,49 @@ canvas {
 #hotbar {
   display: flex;
   margin-bottom: 10px;
+}
+
+.hotbar-block {
+  width: 300px;
+  height: 300px;
+  overflow: hidden;
+  transform: scale(25%) translateY(-460px) translateX(-425px);
+}
+
+.hotbar-block-face {
+  transform-origin: 0 0;
+  position: absolute;
+  width: 100px;
+  height: 100px;
+}
+
+.hotbar-block-right {
+  background-image: url(/assets/blocks/dirt.png);
+  image-rendering: pixelated;
+  background-size: 100px 100px;
+  -ms-transform: rotate(-30deg) skewX(-30deg) translate(130px, 172px) scaleY(0.864);
+  -webkit-transform: rotate(-30deg) skewX(-30deg) translate(130px, 172px) scaleY(0.864);
+  transform: rotate(-30deg) skewX(-30deg) translate(130px, 172px) scaleY(0.864);
+  filter: brightness(0.75);
+}
+
+.hotbar-block-top {
+  background-image: url(/assets/blocks/dirt.png);
+  image-rendering: pixelated;
+  background-size: 100px 100px;
+  -ms-transform: rotate(210deg) skew(-30deg) translate(-200px, -60px) scaleY(0.864);
+  -webkit-transform: rotate(210deg) skew(-30deg) translate(-200px, -60px) scaleY(0.864);
+  transform: rotate(210deg) skew(-30deg) translate(-200px, -60px) scaleY(0.864);
+}
+
+.hotbar-block-left {
+  background-image: url(/assets/blocks/dirt.png);
+  image-rendering: pixelated;
+  background-size: 100px 100px;
+  -ms-transform: rotate(90deg) skewX(-30deg) scaleY(0.864) translate(68px, -131px);
+  -webkit-transform: rotate(90deg) skewX(-30deg) scaleY(0.864) translate(68px, -131px);
+  transform: rotate(90deg) skewX(-30deg) scaleY(0.864) translate(68px, -131px);
+  filter: brightness(0.5);
 }
 
 .slot {
@@ -98,19 +167,33 @@ canvas {
   bottom: 20px;
   left: 50%;
   transform: translateX(-50%);
-  width: 400px;
-  height: 47.5px;
-  background-size: 400px 47.5px;
+  width: 600px;
+  height: 71.25px;
+  background-size: 600px 71.25px;
   image-rendering: pixelated;
   display: flex;
 }
 
 .hotbar .item-one, .hotbar .item-two, .hotbar .item-three, .hotbar .item-four, .hotbar .item-five, .hotbar .item-six, .hotbar .item-seven, .hotbar .item-eight, .hotbar .item-nine {
   background: none;
-  width: 40px;
-  height: 40px;
+  width: 52.5px;
+  height: 52.5px;
   margin: 3.75px;
   margin-right: 0px;
+}
+
+.xpbar {
+  background: url(/assets/ui/gui/icons.png);
+  position: fixed;
+  bottom: 115px;
+  left: 50%;
+  transform: translateX(-50%) scale(328%);
+  width: 182px;
+  height: 5px;
+  background-size: 256px 256px; 
+  background-position: 0px -64px;
+  image-rendering: pixelated;
+  background-repeat: no-repeat;
 }
 
 .hand {
@@ -188,6 +271,7 @@ canvas {
 }
 
 .chat {
+  display: none;
   z-index: 1000;
   position: fixed;
   bottom: 20px;
@@ -202,6 +286,7 @@ canvas {
 }
 
 .chat-logs {
+  display: none;
   z-index: 1000;
   position: fixed;
   bottom: 80px;
@@ -214,3 +299,44 @@ canvas {
   opacity: 75%;
   font-family: 'Mojangles', sans-serif;
 }
+
+.held-block {
+  transform: rotateX(250deg) rotateY(0deg) rotateZ(160deg) translateY(55px) translateX(-65px) scale(150%) scaleZ(120%);
+  z-index: 5;
+  transition: 0s;
+  opacity: 100%;
+  width: 200px;
+  height: 200px;
+  position: absolute;
+  bottom: -30px;
+  right: -20px;
+  transform-style: preserve-3d;
+  transition: transform 0.1s ease-out;
+}
+
+.held-block-face {
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  position: absolute;
+  border-radius: 0%;
+}
+
+.held-block-top {
+  image-rendering: pixelated;
+  transition: 2s ease-in;
+  transform: translateZ(-199px);
+  background-image: url(/assets/blocks/dirt.png);
+  background-size: 200px 200px;
+}
+
+.held-block-left {
+  transition: 2s ease-in;
+  image-rendering: pixelated;
+  transform: translateX(-1px) rotateX(90deg);
+  transform-origin: bottom;
+  background-image: url(/assets/blocks/dirt.png);
+  background-size: 200px 200px;
+}
+

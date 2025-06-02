@@ -8,13 +8,14 @@ let superflat = localStorage.getItem('superflat');
 
 const inventory = {};
 
-scene.background = new THREE.Color(0xffffff);
+scene.background = new THREE.Color(0xdcebf8);
 
-if (superflat == 'true') {
+
+/*if (superflat == 'true') {
     scene.fog = new THREE.Fog(0xffffff, 4, 12);
 } else {
-    scene.fog = new THREE.Fog(0xffffff, 4, 6);
-}
+    scene.fog = new THREE.Fog(0xffffff, 6, 10);
+}*/
 
 const gridSize = 10;
 const spacing = 1;
@@ -25,7 +26,7 @@ const planeGeometry = new THREE.PlaneGeometry((gridSize - 1) * spacing, (gridSiz
 const planeMaterial = new THREE.MeshBasicMaterial({ color: 0x999999, side: THREE.DoubleSide });
 const plane = new THREE.Mesh(planeGeometry, planeMaterial);
 plane.rotation.x = -Math.PI / 2;
-scene.add(plane);
+//scene.add(plane);
 
 const playerHeight = 2.0;
 const player = {
@@ -82,19 +83,21 @@ document.addEventListener('mousemove', (event) => {
 const hand = document.getElementById('hand');
 
 function handleMovement() {
-    const speed = 0.1;
+    const speed = 0.05;
     const friction = .8;
-    const gravity = 0.04;
-    const jumpStrength = 0.4;
+    const gravity = 0.01;
+    const jumpStrength = 0.17;
 
     const direction = new THREE.Vector3(0, 0, -1);
     direction.applyQuaternion(camera.quaternion);
+    direction.y = 0; // Ignore vertical component
+    direction.normalize();
 
     const right = new THREE.Vector3(1, 0, 0);
     right.applyQuaternion(camera.quaternion);
-
-    direction.normalize();
+    right.y = 0; // Ignore vertical component
     right.normalize();
+
 
     if (keys['KeyW']) {
         player.velocity.add(direction.clone().multiplyScalar(speed));
@@ -139,9 +142,9 @@ function handleMovement() {
             const distance = child.position.distanceTo(player.position);
             let isVisible;
             if (superflat == 'false') {
-                isVisible = distance < 7;
+                isVisible = distance < 10;
             } else {
-                isVisible = distance < 13;
+                isVisible = distance < 15;
             }
             child.visible = isVisible && isBlockInFrustum(child);
         }
@@ -164,93 +167,67 @@ function updateFrustum() {
 }
 
 function handleCollisionDetection() {
-    const playerBoundingBox = new THREE.Box3().setFromObject(camera);
+    const playerBox = new THREE.Box3().setFromCenterAndSize(
+        player.position.clone(),
+        new THREE.Vector3(0.8, playerHeight, 0.8) // width, height, depth
+    );
 
-    const raycasterDown = new THREE.Raycaster(player.position, new THREE.Vector3(0, -1, 0));
-    const raycasterUp = new THREE.Raycaster(player.position, new THREE.Vector3(0, 1, 0));
-    const raycasterLeft = new THREE.Raycaster(player.position, new THREE.Vector3(-1, 0, 0));
-    const raycasterRight = new THREE.Raycaster(player.position, new THREE.Vector3(1, 0, 0));
-    const raycasterForward = new THREE.Raycaster(player.position, new THREE.Vector3(0, 0, -1));
-    const raycasterBackward = new THREE.Raycaster(player.position, new THREE.Vector3(0, 0, 1));
+    player.onGround = false;
 
-    const intersectionsDown = raycasterDown.intersectObjects(scene.children, true);
-    const intersectionsUp = raycasterUp.intersectObjects(scene.children, true);
-    const intersectionsLeft = raycasterLeft.intersectObjects(scene.children, true);
-    const intersectionsRight = raycasterRight.intersectObjects(scene.children, true);
-    const intersectionsForward = raycasterForward.intersectObjects(scene.children, true);
-    const intersectionsBackward = raycasterBackward.intersectObjects(scene.children, true);
+    for (const child of scene.children) {
+        if (!(child instanceof THREE.Mesh) || child === camera) continue;
 
-    if (intersectionsDown.length > 0) {
-        const intersectionDown = intersectionsDown[0];
-        const distanceDown = intersectionDown.distance;
-        const collisionY = intersectionDown.point.y;
+        const blockBox = new THREE.Box3().setFromObject(child);
+        if (!playerBox.intersectsBox(blockBox)) continue;
 
-        if (distanceDown < playerHeight / 2 + .1) { // 0.1 is a small buffer for collision tolerance
-            player.onGround = true;
-            player.velocity.y = 0;
-            player.position.y = collisionY + playerHeight / 2;
+        const overlap = new THREE.Vector3();
+
+        const playerMin = playerBox.min;
+        const playerMax = playerBox.max;
+        const blockMin = blockBox.min;
+        const blockMax = blockBox.max;
+
+        const xOverlap = Math.min(playerMax.x - blockMin.x, blockMax.x - playerMin.x);
+        const yOverlap = Math.min(playerMax.y - blockMin.y, blockMax.y - playerMin.y);
+        const zOverlap = Math.min(playerMax.z - blockMin.z, blockMax.z - playerMin.z);
+
+        if (yOverlap < xOverlap && yOverlap < zOverlap) {
+            // Vertical collision
+            if (player.position.y > child.position.y) {
+                // Landed on block
+                player.position.y += yOverlap;
+                player.velocity.y = 0;
+                player.onGround = true;
+            } else {
+                // Hit head
+                player.position.y -= yOverlap;
+                player.velocity.y = Math.min(0, player.velocity.y);
+            }
+        } else if (xOverlap < zOverlap) {
+            // Horizontal X collision
+            if (player.position.x > child.position.x) {
+                player.position.x += xOverlap;
+                player.velocity.x = Math.max(0, player.velocity.x);
+            } else {
+                player.position.x -= xOverlap;
+                player.velocity.x = Math.min(0, player.velocity.x);
+            }
+        } else {
+            // Horizontal Z collision
+            if (player.position.z > child.position.z) {
+                player.position.z += zOverlap;
+                player.velocity.z = Math.max(0, player.velocity.z);
+            } else {
+                player.position.z -= zOverlap;
+                player.velocity.z = Math.min(0, player.velocity.z);
+            }
         }
-    }
 
-    if (intersectionsUp.length > 0) {
-        const intersectionUp = intersectionsUp[0];
-        const distanceUp = intersectionUp.distance;
-        const collisionY = intersectionUp.point.y;
-
-        if (distanceUp < playerHeight / 2) {
-            player.velocity.y = Math.min(0, player.velocity.y);
-            player.position.y = collisionY - playerHeight / 2;
-        }
-    }
-
-    // Handle leftward collision
-    if (intersectionsLeft.length > 0) {
-        const intersectionLeft = intersectionsLeft[0];
-        const distanceLeft = intersectionLeft.distance;
-        const collisionX = intersectionLeft.point.x;
-
-        if (distanceLeft < 0.5) {
-            player.velocity.x = Math.max(0, player.velocity.x);
-            player.position.x = collisionX + 0.51;
-        }
-    }
-
-    // Handle rightward collision
-    if (intersectionsRight.length > 0) {
-        const intersectionRight = intersectionsRight[0];
-        const distanceRight = intersectionRight.distance;
-        const collisionX = intersectionRight.point.x;
-
-        if (distanceRight < 0.5) {
-            player.velocity.x = Math.min(0, player.velocity.x);
-            player.position.x = collisionX - 0.51;
-        }
-    }
-
-    // Handle forward collision
-    if (intersectionsForward.length > 0) {
-        const intersectionForward = intersectionsForward[0];
-        const distanceForward = intersectionForward.distance;
-        const collisionZ = intersectionForward.point.z;
-
-        if (distanceForward < 0.5) {
-            player.velocity.z = Math.max(0, player.velocity.z);
-            player.position.z = collisionZ + 0.51;
-        }
-    }
-
-    // Handle backward collision
-    if (intersectionsBackward.length > 0) {
-        const intersectionBackward = intersectionsBackward[0];
-        const distanceBackward = intersectionBackward.distance;
-        const collisionZ = intersectionBackward.point.z;
-
-        if (distanceBackward < 0.5) {
-            player.velocity.z = Math.min(0, player.velocity.z);
-            player.position.z = collisionZ - 0.51;
-        }
+        // Update bounding box after resolution
+        playerBox.setFromCenterAndSize(player.position.clone(), new THREE.Vector3(0.8, playerHeight, 0.8));
     }
 }
+
 
 function animate() {
     calculateFPS(performance.now());
@@ -294,6 +271,17 @@ function generateChunk(x, z) {
                     if (Math.random() < 0.01 && height < 8) {
                         generateOakTree((x * chunkSize) + i, height + 1, (z * chunkSize) + j);
                     }
+                    if (Math.random() < 0.001 && height < 8) {
+                        generateVillageHouse((x * chunkSize) + i, height + 1, (z * chunkSize) + j);
+                    }
+                }
+
+                for (let k = -3; k >= -3; k--) {
+                    const bedrockMaterial = new THREE.MeshFaceMaterial(bedrockTexture);
+                    bedrockMaterial.name = 'bedrock';
+                    const bedrockBlock = new THREE.Mesh(geometry, bedrockMaterial);
+                    bedrockBlock.position.set((x * chunkSize) + i, k, (z * chunkSize) + j);
+                    scene.add(bedrockBlock);
                 }
 
                 for (let k = 0; k < height; k++) {
@@ -317,6 +305,14 @@ function generateChunk(x, z) {
                     scene.add(stoneBlock);
                 }
 
+                for (let k = -2; k >= -2; k--) {
+                    const bedrockMaterial = new THREE.MeshFaceMaterial(bedrockTexture);
+                    bedrockMaterial.name = 'bedrock';
+                    const bedrockBlock = new THREE.Mesh(geometry, bedrockMaterial);
+                    bedrockBlock.position.set((x * chunkSize) + i, k, (z * chunkSize) + j);
+                    scene.add(bedrockBlock);
+                }
+
                 for (let k = 1; k >= 0; k--) {
                     const dirtMaterial = new THREE.MeshFaceMaterial(dirtTexture);
                     dirtMaterial.name = 'dirt';
@@ -337,20 +333,105 @@ function generateChunk(x, z) {
     }
 }
 
+function generateVillageHouse(x, y, z) {
+    const houseLayers = [
+        [
+            "11111",
+            "11111",
+            "11111",
+            "11111",
+            "11111"
+        ],
+        [
+            "12021",
+            "20002",
+            "20002",
+            "20002",
+            "12221"
+        ],
+        [
+            "12021",
+            "20002",
+            "30003",
+            "20002",
+            "12321"
+        ],
+        [
+            "12221",
+            "20002",
+            "20002",
+            "20002",
+            "12221"
+        ],
+        [
+            "44444",
+            "42224",
+            "42224",
+            "42224",
+            "44444"
+        ]
+    ];
 
+    for (let layerIndex = 0; layerIndex < houseLayers.length; layerIndex++) {
+        const pattern = houseLayers[layerIndex];
+        const occupiedPositions = new Set();
+
+        const isOccupied = (x, y, z) => {
+            const key = `${x},${y},${z}`;
+            return occupiedPositions.has(key);
+        };
+
+        for (let row = 0; row < 5; row++) {
+            for (let col = 0; col < 5; col++) {
+                const char = pattern[row][col];
+                if (char === '0') continue;
+
+                const offsetX = col - 2;
+                const offsetZ = row - 2;
+                const worldX = x + offsetX;
+                const worldY = y + layerIndex;  // <-- stack layers vertically by adding layerIndex
+                const worldZ = z + offsetZ;
+
+                if (!isOccupied(worldX, worldY, worldZ)) {
+                    let blockMaterial;
+                    let blockName;
+
+                    if (char === '1') {
+                        blockMaterial = new THREE.MeshFaceMaterial(cobblestoneTexture);
+                        blockName = 'cobblestone';
+                    } else if (char === '2') {
+                        blockMaterial = new THREE.MeshFaceMaterial(oakPlanksTexture);
+                        blockName = 'oak_planks';
+                    } else if (char === '3') {
+                        blockMaterial = new THREE.MeshFaceMaterial(glassTexture);
+                        blockName = 'glass';
+                    } else if (char === '4') {
+                        blockMaterial = new THREE.MeshFaceMaterial(oakLogTexture);
+                        blockName = 'oak_log';
+                    }
+
+                    blockMaterial.name = blockName;
+                    const block = new THREE.Mesh(geometry, blockMaterial);
+                    block.position.set(worldX, worldY, worldZ);
+                    scene.add(block);
+                    occupiedPositions.add(`${worldX},${worldY},${worldZ}`);
+                }
+            }
+        }
+    }
+}
 
 
 function generateOakTree(x, y, z) {
     const trunkHeight = Math.floor(Math.random() * 3) + 2;
-    const leavesRadius = Math.floor(Math.random() * 2) + 2;
     const occupiedPositions = new Set();
 
-    // Check if position is occupied by dirt or grass
     const isOccupied = (x, y, z) => {
         const key = `${x},${y},${z}`;
         return occupiedPositions.has(key);
     };
 
+    // Add trunk
     for (let i = 0; i < trunkHeight; i++) {
         const oakLogMaterial = new THREE.MeshFaceMaterial(oakLogTexture);
         oakLogMaterial.name = 'oak_log';
@@ -360,26 +441,74 @@ function generateOakTree(x, y, z) {
         occupiedPositions.add(`${x},${y + i},${z}`);
     }
 
-    for (let offsetX = -leavesRadius; offsetX <= leavesRadius; offsetX++) {
-        for (let offsetY = -leavesRadius; offsetY <= leavesRadius; offsetY++) {
-            for (let offsetZ = -leavesRadius; offsetZ <= leavesRadius; offsetZ++) {
-                const distance = Math.sqrt(offsetX * offsetX + offsetY * offsetY + offsetZ * offsetZ);
-                const positionKey = `${x + offsetX},${y + trunkHeight + offsetY},${z + offsetZ}`;
+    const leafLayers = [
+        [
+            "11111",
+            "11111",
+            "11211",
+            "11111",
+            "01111"
+        ],
+        [
+            "11110",
+            "11111",
+            "11211",
+            "11111",
+            "11111"
+        ],
+        [
+            "00000",
+            "01110",
+            "01210",
+            "01110",
+            "00000"
+        ],
+        [
+            "00000",
+            "00100",
+            "01110",
+            "00100",
+            "00000"
+        ]
+    ];
 
-                if (distance <= leavesRadius && Math.random() < 0.5 && !isOccupied(x + offsetX, y + trunkHeight + offsetY, z + offsetZ)) {
-                    // Check if position is not occupied by dirt or grass
-                    const oakLeavesMaterial = new THREE.MeshFaceMaterial(oakLeavesTexture);
-                    oakLeavesMaterial.name = 'oak_leaves';
-                    const oakLeavesBlock = new THREE.Mesh(geometry, oakLeavesMaterial);
-                    oakLeavesBlock.position.set(x + offsetX, y + trunkHeight + offsetY, z + offsetZ);
-                    scene.add(oakLeavesBlock);
-                    occupiedPositions.add(positionKey);
+    for (let layerIndex = 0; layerIndex < leafLayers.length; layerIndex++) {
+        const pattern = leafLayers[layerIndex];
+        const yOffset = trunkHeight + layerIndex;
+
+        for (let row = 0; row < 5; row++) {
+            for (let col = 0; col < 5; col++) {
+                const char = pattern[row][col];
+                if (char === '0') continue;
+
+                const offsetX = col - 2;
+                const offsetZ = row - 2;
+                const worldX = x + offsetX;
+                const worldY = y + yOffset;
+                const worldZ = z + offsetZ;
+
+                if (!isOccupied(worldX, worldY, worldZ)) {
+                    let blockMaterial;
+                    let blockName;
+
+                    if (char === '1') {
+                        blockMaterial = new THREE.MeshFaceMaterial(oakLeavesTexture);
+                        blockName = 'oak_leaves';
+                    } else if (char === '2') {
+                        blockMaterial = new THREE.MeshFaceMaterial(oakLogTexture);
+                        blockName = 'oak_log';
+                    }
+
+                    blockMaterial.name = blockName;
+                    const block = new THREE.Mesh(geometry, blockMaterial);
+                    block.position.set(worldX, worldY, worldZ);
+                    scene.add(block);
+                    occupiedPositions.add(`${worldX},${worldY},${worldZ}`);
                 }
             }
         }
     }
 }
-
 
 for (let i = -chunkDistance; i <= chunkDistance; i++) {
     for (let j = -chunkDistance; j <= chunkDistance; j++) {
@@ -411,7 +540,7 @@ camera.position.y += playerHeight / 2;
 const coordinatesDiv = document.getElementById("coordinates");
 
 function updateCoordinatesText(position) {
-    coordinatesDiv.textContent = `x: ${position.x.toFixed(2)}, y: ${position.y.toFixed(2) - .5}, z: ${position.z.toFixed(2)}`;
+    coordinatesDiv.textContent = `x: ${Math.round(position.x.toFixed(2))}, y: ${Math.round(position.y.toFixed(2) - .5)}, z: ${Math.round(position.z.toFixed(2))}`;
 }
 
 function updateCameraPosition() {
@@ -445,6 +574,9 @@ function deleteBlock() {
         const intersect = intersects[0];
         if (intersect.object !== plane) {
             let blockId = intersect.object.material.name;
+            if (blockId == 'bedrock') {
+                return;
+            }
 
             const audio = new Audio(`assets/sound/break/${blockId}.ogg`);
             audio.play();
@@ -463,6 +595,7 @@ function deleteBlock() {
     }
 }
 
+let holding = "oakPlanks";
 
 function addBlock() {
     const raycaster = new THREE.Raycaster();
@@ -471,37 +604,37 @@ function addBlock() {
     const intersects = raycaster.intersectObjects(scene.children, true);
     if (intersects.length > 0) {
         const intersect = intersects[0];
+
         const normalMatrix = new THREE.Matrix3().getNormalMatrix(intersect.object.matrixWorld);
-        const normal = intersect.face.normal.clone().applyMatrix3(normalMatrix).normalize();
+        const worldNormal = intersect.face.normal.clone().applyMatrix3(normalMatrix).normalize();
 
-        const position = intersect.point
-            .add(normal.clone().multiplyScalar(0.5))
-            .add(normal.clone().multiplyScalar(0.01));
+        const clickedBlockPos = intersect.object.position.clone().floor();
+        const newBlockPos = clickedBlockPos.clone().add(worldNormal);
 
-        position.set(
-            Math.floor(position.x),
-            Math.floor(position.y),
-            Math.floor(position.z)
+        newBlockPos.set(
+            Math.round(newBlockPos.x),
+            Math.round(newBlockPos.y),
+            Math.round(newBlockPos.z)
         );
 
-        const isInsideBlock = scene.children.some(child => {
+        const isOccupied = scene.children.some(child => {
             if (child instanceof THREE.Mesh && child !== plane) {
-                const box = new THREE.Box3().setFromObject(child);
-                return box.containsPoint(position);
+                const childPos = child.position;
+                return childPos.x === newBlockPos.x && childPos.y === newBlockPos.y && childPos.z === newBlockPos.z;
             }
             return false;
         });
 
-        if (!isInsideBlock) {
+        if (!isOccupied) {
             const geometry = new THREE.BoxGeometry(1, 1, 1);
-            const material = new THREE.MeshFaceMaterial(dirtTexture);
-            const newVoxel = new THREE.Mesh(geometry, material);
-            newVoxel.position.copy(position);
-
-            scene.add(newVoxel);
+            const material = new THREE.MeshFaceMaterial(blockMaterials[holding]);
+            const block = new THREE.Mesh(geometry, material);
+            block.position.copy(newBlockPos);
+            scene.add(block);
         }
     }
 }
+
 
 function addToInventory(blockId) {
     if (!blockId) {
@@ -536,7 +669,7 @@ function calculateFPS(currentTimeStamp) {
     frameCount++;
 
     fps = 1 / deltaTime;
-    document.getElementById('fps').innerHTML = `FPS: ${Math.round(fps * 5)}`;
+    document.getElementById('fps').innerHTML = `FPS: ${Math.round(fps)}`;
 
     lastTimeStamp = currentTimeStamp;
 }
@@ -552,18 +685,58 @@ window.addEventListener('resize', onWindowResize, false);
 animate();
 updateCameraPosition();
 
+const hotbar = [
+    "dirt",
+    "stone",
+    "oakPlanks",
+    "cobblestone",
+    "glass",
+    "oakLog",
+    "oakLeaves",
+    "bedrock",
+    "grass"
+];
+
+let hotbarSelected = 0;
+
 document.addEventListener('DOMContentLoaded', () => {
 
     // Toggle inventory visibility when pressing "i" key
     document.addEventListener('keydown', (event) => {
-
         if (event.code === 'KeyI') {
             document.exitPointerLock();
             toggleInventory();
-        }
-        if(event.code === 'KeyT') {
+        } else if (event.code === 'KeyT') {
             
+        } else if (event.code === 'Digit1'){
+            hotbarSelected = 0;
+            holding = hotbar[hotbarSelected];
+        } else if (event.code === 'Digit2'){
+            hotbarSelected = 1;
+            holding = hotbar[hotbarSelected];
+        } else if (event.code === 'Digit3'){
+            hotbarSelected = 2;
+            holding = hotbar[hotbarSelected];
+        } else if (event.code === 'Digit4'){
+            hotbarSelected = 3;
+            holding = hotbar[hotbarSelected];
+        } else if (event.code === 'Digit5'){
+            hotbarSelected = 4;
+            holding = hotbar[hotbarSelected];
+        } else if (event.code === 'Digit6'){
+            hotbarSelected = 5;
+            holding = hotbar[hotbarSelected];
+        } else if (event.code === 'Digit7'){
+            hotbarSelected = 6;
+            holding = hotbar[hotbarSelected];
+        } else if (event.code === 'Digit8'){
+            hotbarSelected = 7;
+            holding = hotbar[hotbarSelected];
+        } else if (event.code === 'Digit9'){
+            hotbarSelected = 8;
+            holding = hotbar[hotbarSelected];
         }
+
     });
 
     function toggleInventory() {

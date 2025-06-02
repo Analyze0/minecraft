@@ -14,7 +14,11 @@
   <div class="splashText" id="splashText"></div>
   <div class="buttons" id="buttons">
     <button class="play" id="play">Play Game</button>
-    <button class="settings" id="settings">Help  Options</button>
+    <button class="minigames" id="minigames">Mini Games</button>
+    <button class="leaderboards" id="leaderboards">Leaderboards</button>
+    <button class="achievements" id="achievements">Achievements</button>
+    <button class="settings" id="settings">Help & Options</button>
+    <button class="store" id="store">Minecraft Store</button>
     <button class="exit" id="exit">Exit Game</button>
   </div>
   <div class="panorama" id="panorama"></div>
@@ -58,15 +62,15 @@
   </div>
 
   <div class="new-world" id="new-world">
-    <p class="title">World Name</p>
+    <p class="new-world-title">World Name</p>
     
     <input type="text" id="new-world-name" value="New World">
     
-    <div id="gamemode-toggle" class="gamemode-toggle">
+    <div id="gamemode-toggle" class="toggle gamemode-toggle">
       <p>Game Mode: Survival</p>
     </div>
 
-    <div id="world-generation-toggle" class="world-generation-toggle">
+    <div id="world-generation-toggle" class="toggle world-generation-toggle">
       <p>World Generation: Normal</p>
     </div>
 
@@ -83,12 +87,16 @@ The classic Minecraft<br>textures, icons and user<br>interface!</p>
     </div>
   </div>
 
+  <div class="cursor" id="cursor"></div>
+
   <img src="/assets/ui/buttons/xbox_face_button_down.png" class="selectBtn">
   <p class="select">Select</p>
 
   <img src="/assets/ui/buttons/xbox_face_button_right.png" class="backBtn">
   <p class="back">Back</p>
 
+  <div class="overlay"></div>
+  <audio id="click-sound" src="/assets/sound/ui/click.ogg" preload="auto"></audio>
   <script src="/scripts/menu.js"></script>
 </body>
 

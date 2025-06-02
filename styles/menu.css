@@ -3,15 +3,39 @@
   src: url('/assets/font/Mojang-Regular[1].ttf') format('truetype');
 }
 
+* {
+  cursor: none;
+}
+
 body,
 html {
-  word-spacing: 5px;
+  word-spacing: 8px;
   user-select: none;
   font-family: 'Mojangles', sans-serif;
 }
 
-button {
-  cursor: pointer;
+.overlay {
+  display: flex;
+  top: 0px;
+  left: 0px;
+  position: fixed;
+  background: white;
+  opacity: 18%;
+  z-index: 100;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.cursor {
+  position: fixed;
+  background: url(/assets/ui/cursor.png);
+  background-size: 50px 50px;
+  left: 0;
+  top: 0;
+  width: 50px;
+  height: 50px;
+  pointer-events: none;
 }
 
 .buttons {
@@ -25,6 +49,7 @@ button {
 }
 
 .buttons button {
+  word-spacing: 8px;
   text-shadow: 1px 1px 0px #1f1f1f;
   font-size: 15px;
   color: white;
@@ -70,13 +95,14 @@ button {
 
 .title {
   position: fixed;
-  top: 100px;
+  top: 130px;
   left: 50%;
   transform: translateX(-50%);
   width: 600px;
 }
 
 .splashText {
+  word-spacing: 5px;
   font-size: 23px;
   rotate: -20deg;
   position: fixed;
@@ -85,7 +111,7 @@ button {
   transform: translateX(-50%);
   color: yellow;
   text-shadow: 3px 3px 0px #444d00;
-  animation: splashtext 1s ease-in-out infinite;
+  animation: splashtext .6s ease-in-out infinite;
 }
 
 @keyframes splashtext {
@@ -166,7 +192,7 @@ button {
 }
 
 .menu-button-left {
-  cursor: pointer;
+  /*cursor:pointer;*/
   border: none;
   position: fixed;
   top: 5px;
@@ -182,7 +208,7 @@ button {
 }
 
 .menu-button-center {
-  cursor: pointer;
+  /*cursor:pointer;*/
   border: none;
   position: fixed;
   top: 5px;
@@ -198,7 +224,7 @@ button {
 }
 
 .menu-button-right {
-  cursor: pointer;
+  /*cursor:pointer;*/
   border: none;
   position: fixed;
   top: 5px;
@@ -309,14 +335,16 @@ button {
   border-left: none;
 }
 
-.new-world .title {
-  font-size: 17px;
-  color: #454545;
-  margin-top: -70px;
-  margin-left: -20px;
+.new-world-title {
+  font-size: 18px;
+  color: #3b3b3b;
+  margin-top: 40px;
+  margin-left: 30px;
+  margin-bottom: -53px;
 }
 
 .new-world input {
+  word-spacing: 8px;
   background: #9c9c9c;
   color: white;
   font-family: 'Mojangles', sans-serif;
@@ -325,7 +353,7 @@ button {
   height: 35px;
   margin-top: 60px;
   border: 3.5px solid gray;
-  font-size: 15px;
+  font-size: 16px;
 }
 
 .new-world input:focus {
@@ -335,7 +363,6 @@ button {
 }
 
 .gamemode-toggle {
-  cursor: pointer;
   background: url(/assets/ui/gui/toggle_off.png);
   background-size: 641px 45px;
   width: 641px;
@@ -351,7 +378,7 @@ button {
 }
 
 .world-generation-toggle {
-  cursor: pointer;
+  /*cursor:pointer;*/
   background: url(/assets/ui/gui/toggle_off.png);
   background-size: 641px 45px;
   width: 641px;
@@ -399,6 +426,7 @@ button {
 }
 
 .createWorld {
+  word-spacing: 8px;
   text-shadow: 1px 1px 0px #1f1f1f;
   font-size: 15px;
   color: white;
