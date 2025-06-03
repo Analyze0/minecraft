@@ -5,6 +5,7 @@
 
 body,
 html {
+  word-spacing: 8px;
   cursor: url('/assets/ui/cursor.cur') !important;
   user-select: none;
   font-family: 'Mojangles', sans-serif;
@@ -91,11 +92,19 @@ canvas {
   margin-bottom: 10px;
 }
 
+.selected-slot {
+  background: url(/assets/ui/gui/hotbar-selected.png);
+  transform: translateY(-3px) translateX(-510px);
+  background-size: 80px 80px;
+  width: 80px;
+  height: 80px;
+}
+
 .hotbar-block {
   width: 300px;
   height: 300px;
   overflow: hidden;
-  transform: scale(25%) translateY(-460px) translateX(-425px);
+  transform: scale(25%) translateY(-460px) translateX(-433px);
 }
 
 .hotbar-block-face {
@@ -109,8 +118,6 @@ canvas {
   background-image: url(/assets/blocks/dirt.png);
   image-rendering: pixelated;
   background-size: 100px 100px;
-  -ms-transform: rotate(-30deg) skewX(-30deg) translate(130px, 172px) scaleY(0.864);
-  -webkit-transform: rotate(-30deg) skewX(-30deg) translate(130px, 172px) scaleY(0.864);
   transform: rotate(-30deg) skewX(-30deg) translate(130px, 172px) scaleY(0.864);
   filter: brightness(0.75);
 }
@@ -119,19 +126,35 @@ canvas {
   background-image: url(/assets/blocks/dirt.png);
   image-rendering: pixelated;
   background-size: 100px 100px;
-  -ms-transform: rotate(210deg) skew(-30deg) translate(-200px, -60px) scaleY(0.864);
-  -webkit-transform: rotate(210deg) skew(-30deg) translate(-200px, -60px) scaleY(0.864);
   transform: rotate(210deg) skew(-30deg) translate(-200px, -60px) scaleY(0.864);
 }
 
 .hotbar-block-left {
-  background-image: url(/assets/blocks/dirt.png);
-  image-rendering: pixelated;
-  background-size: 100px 100px;
-  -ms-transform: rotate(90deg) skewX(-30deg) scaleY(0.864) translate(68px, -131px);
-  -webkit-transform: rotate(90deg) skewX(-30deg) scaleY(0.864) translate(68px, -131px);
   transform: rotate(90deg) skewX(-30deg) scaleY(0.864) translate(68px, -131px);
   filter: brightness(0.5);
+  overflow: hidden;
+  position: absolute;
+  width: 100px;
+  height: 100px;
+}
+
+.hotbar-block-left .rotated-bg {
+  width: 100px;
+  height: 100px;
+  background-size: 100px 100px;
+  transform: rotate(270deg);
+  image-rendering: pixelated;
+}
+
+.item-name-hotbar-preview {
+  position: fixed;
+  bottom: 150px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: white;
+  opacity: 0%;
+  transition: .5s ease-in-out;
+  text-shadow: 1px 1px 0px black;
 }
 
 .slot {
@@ -172,6 +195,7 @@ canvas {
   background-size: 600px 71.25px;
   image-rendering: pixelated;
   display: flex;
+  opacity: 70%;
 }
 
 .hotbar .item-one, .hotbar .item-two, .hotbar .item-three, .hotbar .item-four, .hotbar .item-five, .hotbar .item-six, .hotbar .item-seven, .hotbar .item-eight, .hotbar .item-nine {
@@ -197,6 +221,7 @@ canvas {
 }
 
 .hand {
+  display: none;
   position: fixed;
   bottom: 200px;
   right: 200px;
@@ -301,7 +326,7 @@ canvas {
 }
 
 .held-block {
-  transform: rotateX(250deg) rotateY(0deg) rotateZ(160deg) translateY(55px) translateX(-65px) scale(150%) scaleZ(120%);
+  transform: rotateX(160deg) rotateY(0deg) rotateZ(160deg) translateY(1000px) translateX(-65px) scale(250%) scaleZ(210%);
   z-index: 5;
   transition: 0s;
   opacity: 100%;
@@ -338,5 +363,5 @@ canvas {
   transform-origin: bottom;
   background-image: url(/assets/blocks/dirt.png);
   background-size: 200px 200px;
+  filter: brightness(0.75);
 }
-

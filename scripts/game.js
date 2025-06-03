@@ -141,10 +141,10 @@ function handleMovement() {
         if (child instanceof THREE.Mesh) {
             const distance = child.position.distanceTo(player.position);
             let isVisible;
-            if (superflat == 'false') {
-                isVisible = distance < 10;
-            } else {
+            if (superflat == 'true') {
                 isVisible = distance < 15;
+            } else {
+                isVisible = distance < 7;
             }
             child.visible = isVisible && isBlockInFrustum(child);
         }
@@ -264,9 +264,12 @@ function generateChunk(x, z) {
                 if (height > 0) {
                     const grassMaterial = new THREE.MeshFaceMaterial(grassTexture);
                     grassMaterial.name = 'grass';
-                    const grassBlock = new THREE.Mesh(geometry, grassMaterial);
-                    grassBlock.position.set((x * chunkSize) + i, height, (z * chunkSize) + j);
-                    scene.add(grassBlock);
+                    const grass
+ = new THREE.Mesh(geometry, grassMaterial);
+                    grass
+.position.set((x * chunkSize) + i, height, (z * chunkSize) + j);
+                    scene.add(grass
+);
 
                     if (Math.random() < 0.01 && height < 8) {
                         generateOakTree((x * chunkSize) + i, height + 1, (z * chunkSize) + j);
@@ -324,9 +327,12 @@ function generateChunk(x, z) {
                 for (let k = 2; k >= 2; k--) {
                     const grassMaterial = new THREE.MeshFaceMaterial(grassTexture);
                     grassMaterial.name = 'grass';
-                    const grassBlock = new THREE.Mesh(geometry, grassMaterial);
-                    grassBlock.position.set((x * chunkSize) + i, k, (z * chunkSize) + j);
-                    scene.add(grassBlock);
+                    const grass
+ = new THREE.Mesh(geometry, grassMaterial);
+                    grass
+.position.set((x * chunkSize) + i, k, (z * chunkSize) + j);
+                    scene.add(grass
+);
                 }
             }
         }
@@ -595,7 +601,7 @@ function deleteBlock() {
     }
 }
 
-let holding = "oakPlanks";
+let holding = "dirt";
 
 function addBlock() {
     const raycaster = new THREE.Raycaster();
@@ -688,56 +694,146 @@ updateCameraPosition();
 const hotbar = [
     "dirt",
     "stone",
-    "oakPlanks",
     "cobblestone",
     "glass",
-    "oakLog",
+    "oakPlanks",
+    "grass",
     "oakLeaves",
     "bedrock",
-    "grass"
+    "oakLog"
 ];
+
+function getFaceTextures(formattedSlotName) {
+    switch (formattedSlotName) {
+        case 'grass':
+            return { top: 'grass_top.png', side: 'grass_side_carried.png' };
+        case 'oak_log':
+            return { top: 'oak_log_top.png', side: 'oak_log.png' };
+        default:
+            return { top: `${formattedSlotName}.png`, side: `${formattedSlotName}.png` };
+    }
+}
+
+hotbar.forEach(function(slot, index) {
+    if (slot.length > 0) {
+        // convert camelCase like ironOre to iron_ore
+        const formattedSlotName = slot.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`);
+
+        const foundItem = items.find(item => item.name === formattedSlotName);
+
+        if (foundItem) {
+            if (foundItem.type === 'block') {
+                const faceTextures = getFaceTextures(formattedSlotName);
+
+                // Constants for positioning
+                const slotSpacing = 39; // px between slot centers, tweak as needed
+                const offsetX = (index * slotSpacing) - 430;
+
+                const html = `
+  <div class="hotbar-block" style="transform: scale(25%) translateY(-460px) translateX(${offsetX}px) !important">
+    <div class="hotbar-block-face hotbar-block-top" style="background:url(/assets/blocks/${faceTextures.top});background-size: 100px 100px"></div>
+    <div class="hotbar-block-face hotbar-block-left">
+      <div class="rotated-bg" style="background-image: url(/assets/blocks/${faceTextures.side});"></div>
+    </div>
+    <div class="hotbar-block-face hotbar-block-right" style="background:url(/assets/blocks/${faceTextures.side});background-size: 100px 100px"></div>
+  </div>
+`;
+
+                switch (index) {
+                    case 0:
+                        document.getElementById('item-one').innerHTML = html;
+                        break;
+                    case 1:
+                        document.getElementById('item-two').innerHTML = html;
+                        break;
+                    case 2:
+                        document.getElementById('item-three').innerHTML = html;
+                        break;
+                    case 3:
+                        document.getElementById('item-four').innerHTML = html;
+                        break;
+                    case 4:
+                        document.getElementById('item-five').innerHTML = html;
+                        break;
+                    case 5:
+                        document.getElementById('item-six').innerHTML = html;
+                        break;
+                    case 6:
+                        document.getElementById('item-seven').innerHTML = html;
+                        break;
+                    case 7:
+                        document.getElementById('item-eight').innerHTML = html;
+                        break;
+                    case 8:
+                        document.getElementById('item-nine').innerHTML = html;
+                        break;
+                }
+            } else {
+                // Handle non-block items here if needed
+            }
+        } else {
+            // Handle unknown items if needed
+        }
+    } else {
+        alert(`Slot ${index}: This slot is empty.`);
+    }
+});
 
 let hotbarSelected = 0;
 
 document.addEventListener('DOMContentLoaded', () => {
+    const hotbarTransforms = [
+        "-510px", "-444px", "-378px", "-312px", "-246px",
+        "-180px", "-114px", "-48px", "18px"
+    ];
 
-    // Toggle inventory visibility when pressing "i" key
     document.addEventListener('keydown', (event) => {
         if (event.code === 'KeyI') {
             document.exitPointerLock();
             toggleInventory();
-        } else if (event.code === 'KeyT') {
-            
-        } else if (event.code === 'Digit1'){
-            hotbarSelected = 0;
-            holding = hotbar[hotbarSelected];
-        } else if (event.code === 'Digit2'){
-            hotbarSelected = 1;
-            holding = hotbar[hotbarSelected];
-        } else if (event.code === 'Digit3'){
-            hotbarSelected = 2;
-            holding = hotbar[hotbarSelected];
-        } else if (event.code === 'Digit4'){
-            hotbarSelected = 3;
-            holding = hotbar[hotbarSelected];
-        } else if (event.code === 'Digit5'){
-            hotbarSelected = 4;
-            holding = hotbar[hotbarSelected];
-        } else if (event.code === 'Digit6'){
-            hotbarSelected = 5;
-            holding = hotbar[hotbarSelected];
-        } else if (event.code === 'Digit7'){
-            hotbarSelected = 6;
-            holding = hotbar[hotbarSelected];
-        } else if (event.code === 'Digit8'){
-            hotbarSelected = 7;
-            holding = hotbar[hotbarSelected];
-        } else if (event.code === 'Digit9'){
-            hotbarSelected = 8;
-            holding = hotbar[hotbarSelected];
+        } else if (event.code.startsWith('Digit')) {
+            const digit = parseInt(event.code.replace('Digit', ''));
+            if (digit >= 1 && digit <= 9) {
+                hotbarSelected = digit - 1;
+                updateSelectedSlot();
+            }
         }
-
     });
+
+    document.addEventListener('wheel', (event) => {
+        if (event.deltaY > 0) {
+            hotbarSelected = (hotbarSelected + 1) % 9;
+        } else {
+            hotbarSelected = (hotbarSelected + 8) % 9; // Same as -1 wrapped
+        }
+        updateSelectedSlot();
+    });
+
+    function updateSelectedSlot() {
+        document.querySelector('.hotbar').style.opacity = "90%";
+        const translateX = hotbarTransforms[hotbarSelected];
+        document.getElementById('selected-slot').style.transform = `translateY(-3px) translateX(${translateX})`;
+        holding = hotbar[hotbarSelected];
+
+    // Format name (e.g., diamondBlock → diamond_block)
+        const formattedName = holding.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`);
+
+    // Lookup item
+        const foundItem = items.find(item => item.name === formattedName);
+
+    // Alert info
+        if (foundItem) {
+            document.getElementById('item-name-hotbar-preview').style.opacity = "100%";
+            document.getElementById('item-name-hotbar-preview').innerHTML = foundItem.name.split('_').map(word => word[0].toUpperCase() + word.slice(1)).join(' ');
+            setTimeout(function(){
+                document.getElementById('item-name-hotbar-preview').style.opacity = "0%";
+            },3000);
+        } 
+        setTimeout(function(){
+            document.querySelector('.hotbar').style.opacity = "70%";
+        },12000);
+}
+
 
     function toggleInventory() {
         if (inventory.style.display === 'none' || !inventory.style.display) {
@@ -747,3 +843,4 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 });
+
