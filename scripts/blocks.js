@@ -425,7 +425,7 @@ const items = [
 },
     {
         name: 'oak_stairs',
-        texture: 'assets/blocks/oak_stairs.png',
+        texture: 'assets/blocks/oak_planks.png',
         category: 'block',
         hardness: 2,
         toolRequired: 'axe'

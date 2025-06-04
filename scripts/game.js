@@ -10,6 +10,127 @@ const inventory = {};
 
 scene.background = new THREE.Color(0xdcebf8);
 
+//Survival
+
+let maxHealth = 10; // # of full hearts displayed (e.g., 10 hearts total)
+let currentHealth = 15; // Internal health value (out of 20 half-hearts for 10 hearts)
+
+function getHealthRepresentation(healthValue) {
+    let representation = "";
+    let tempHealthValue = healthValue;
+    // Each heart is 2 health points (half-hearts)
+    for (let i = 0; i < maxHealth; i++) {
+        if (tempHealthValue >= 2) {
+            representation += "1";
+            tempHealthValue -= 2;
+        } else if (tempHealthValue === 1) {
+            representation += "2";
+            tempHealthValue -= 1;
+        } else {
+            representation += "0";
+        }
+    }
+    return representation;
+}
+
+function updateHealthDisplay() {
+    const healthBarContainer = document.getElementById('health-bar-container');
+    healthBarContainer.innerHTML = ''; // Clear previous hearts
+
+    const healthString = getHealthRepresentation(currentHealth);
+
+    for (let i = 0; i < healthString.length; i++) {
+        const heartChar = healthString[i];
+
+        const heartContainerDiv = document.createElement('div');
+        heartContainerDiv.classList.add('heart-container');
+
+        const heartImage = document.createElement('img');
+
+        if (heartChar === '1') {
+            heartImage.src = '/assets/ui/gui/full_heart.png';
+        } else if (heartChar === '2') {
+            heartImage.src = '/assets/ui/gui/half_heart.png';
+        } else { 
+            heartImage.src = '/assets/ui/gui/blank.png';
+        }
+
+        heartContainerDiv.appendChild(heartImage);
+        healthBarContainer.appendChild(heartContainerDiv);
+    }
+}
+
+updateHealthDisplay();
+
+let maxHunger = 20;
+let maxHungerIcons = 10;
+
+let currentHunger = 5;
+
+function getHungerRepresentation(hungerValue) {
+    let representation = "";
+    
+    let remainingPoints = maxHunger - hungerValue;
+    
+    remainingPoints = Math.max(0, remainingPoints);
+    remainingPoints = Math.min(remainingPoints, maxHunger);
+
+    for (let i = 0; i < maxHungerIcons; i++) {
+        if (remainingPoints >= 2) {
+            representation += "1";
+            remainingPoints -= 2;
+        } else if (remainingPoints === 1) {
+            representation += "2";
+            remainingPoints -= 1;
+        } else {
+            representation += "0";
+        }
+    }
+    return representation;
+}
+
+function updateHungerDisplay() {
+    const hungerBarContainer = document.getElementById('hunger-bar-container');
+    hungerBarContainer.innerHTML = ''; // Clear previous icons
+
+    const hungerString = getHungerRepresentation(currentHunger);
+
+    // Create arrays to hold the different types of hunger icon elements
+    const blankIcons = [];
+    const halfIcons = [];
+    const fullIcons = [];
+
+    for (let i = 0; i < hungerString.length; i++) {
+        const hungerChar = hungerString[i];
+
+        const hungerIconContainerDiv = document.createElement('div');
+        hungerIconContainerDiv.classList.add('hunger-container');
+
+        const hungerImage = document.createElement('img');
+
+        if (hungerChar === '1') {
+            hungerImage.src = '/assets/ui/gui/full_food_icon.png';
+            hungerIconContainerDiv.appendChild(hungerImage);
+            fullIcons.push(hungerIconContainerDiv); // Store full icons
+        } else if (hungerChar === '2') {
+            hungerImage.src = '/assets/ui/gui/half_food_icon.png';
+            hungerIconContainerDiv.appendChild(hungerImage);
+            halfIcons.push(hungerIconContainerDiv); // Store half icons
+        } else { // hungerChar === '0'
+            hungerImage.src = '/assets/ui/gui/blank.png'; // Using your specified 'blank.png'
+            hungerIconContainerDiv.appendChild(hungerImage);
+            blankIcons.push(hungerIconContainerDiv); // Store blank icons
+        }
+    }
+
+    // Now, append them to the container in the desired order: Blank, Half, Full
+    blankIcons.forEach(icon => hungerBarContainer.appendChild(icon));
+    halfIcons.forEach(icon => hungerBarContainer.appendChild(icon));
+    fullIcons.forEach(icon => hungerBarContainer.appendChild(icon));
+}
+
+// Initial display update
+updateHungerDisplay();
 
 /*if (superflat == 'true') {
     scene.fog = new THREE.Fog(0xffffff, 4, 12);
@@ -83,7 +204,7 @@ document.addEventListener('mousemove', (event) => {
 const hand = document.getElementById('hand');
 
 function handleMovement() {
-    const speed = 0.05;
+    const speed = 0.027;
     const friction = .8;
     const gravity = 0.01;
     const jumpStrength = 0.17;
@@ -142,9 +263,9 @@ function handleMovement() {
             const distance = child.position.distanceTo(player.position);
             let isVisible;
             if (superflat == 'true') {
-                isVisible = distance < 15;
+                isVisible = distance < 12;
             } else {
-                isVisible = distance < 7;
+                isVisible = distance < 10;
             }
             child.visible = isVisible && isBlockInFrustum(child);
         }
@@ -427,7 +548,6 @@ function generateVillageHouse(x, y, z) {
     }
 }
 
-
 function generateOakTree(x, y, z) {
     const trunkHeight = Math.floor(Math.random() * 3) + 2;
     const occupiedPositions = new Set();
@@ -632,12 +752,26 @@ function addBlock() {
         });
 
         if (!isOccupied) {
-            const geometry = new THREE.BoxGeometry(1, 1, 1);
-            const material = new THREE.MeshFaceMaterial(blockMaterials[holding]);
-            const block = new THREE.Mesh(geometry, material);
-            block.position.copy(newBlockPos);
-            scene.add(block);
-        }
+    let block;
+
+    if (holding === "oakStairs") {
+        const geometry = createStairGeometry();
+        const material = new THREE.MeshBasicMaterial({
+            map: textures.oakPlanks,
+            side: THREE.DoubleSide
+        });
+        block = new THREE.Mesh(geometry, material);
+    } else {
+        const geometry = new THREE.BoxGeometry(1, 1, 1);
+        const material = new THREE.MeshFaceMaterial(blockMaterials[holding]);
+        block = new THREE.Mesh(geometry, material);
+    }
+
+    block.position.copy(newBlockPos);
+    scene.add(block);
+}
+
+
     }
 }
 
@@ -697,7 +831,7 @@ const hotbar = [
     "cobblestone",
     "glass",
     "oakPlanks",
-    "grass",
+    "oakStairs",
     "oakLeaves",
     "bedrock",
     "oakLog"

@@ -28,7 +28,7 @@ canvas {
   left: 0px;
   position: fixed;
   background: white;
-  opacity: 25%;
+  opacity: 10%;
   z-index: 100;
   width: 100%;
   height: 100%;
@@ -148,7 +148,7 @@ canvas {
 
 .item-name-hotbar-preview {
   position: fixed;
-  bottom: 150px;
+  bottom: 170px;
   left: 50%;
   transform: translateX(-50%);
   color: white;
@@ -169,7 +169,6 @@ canvas {
   display: flex;
   flex-wrap: wrap;
   width: 300px; /* Adjust the width to fit your needs */
-  border: 1px solid #aaa; /* Add a border for visibility */
   padding: 5px;
 }
 
@@ -178,10 +177,6 @@ canvas {
   height: 50px;
   background-color: #999;
   margin: 5px;
-}
-
-.selected {
-  border: 2px solid red;
 }
 
 .hotbar {
@@ -218,6 +213,74 @@ canvas {
   background-position: 0px -64px;
   image-rendering: pixelated;
   background-repeat: no-repeat;
+}
+
+.xp-counter {
+  font-size: 23px;
+  position: fixed;
+  bottom: 130px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #cae676;
+  text-shadow: 
+    -1.5px -1.5px 0 #000,  
+    1.5px -1.5px 0 #000,
+    -1.5px 1.5px 0 #000,
+    1.5px 1.5px 0 #000;
+}
+
+#health-bar-container {
+  position: fixed;
+  left: 50%;
+  transform: translateX(calc(-50% - 168px)) scale(81%);
+  bottom: 115px;
+  display: flex; /* Arranges heart containers in a row */
+  gap: 0px;
+  padding: 10px;
+}
+
+.heart-container {
+  background: url(/assets/ui/gui/heart_container.png);
+  background-size: 32px 32px;
+  image-rendering: pixelated;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.heart-container img {
+  image-rendering: pixelated;
+  width: 25px; /* Make image fill its container */
+  height: 25px;
+}
+
+#hunger-bar-container {
+  position: fixed;
+  left: 50%;
+  transform: translateX(calc(-50% + 168px)) scale(81%);
+  bottom: 116px;
+  display: flex; /* Arranges hunger containers in a row */
+  gap: 0px; /* Space between hunger containers */
+  padding: 10px;
+}
+
+.hunger-container {
+  background: url(/assets/ui/gui/hunger_container.png);
+  background-size: 32px 32px;
+  image-rendering: pixelated;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.hunger-container img {
+  image-rendering: pixelated;
+  width: 25px; /* Make image fill its container */
+  height: 25px;
 }
 
 .hand {
