@@ -3,6 +3,10 @@
   src: url('/assets/font/Mojang-Regular[1].ttf') format('truetype');
 }
 
+* {
+  cursor: none;
+}
+
 body,
 html {
   word-spacing: 8px;
@@ -20,6 +24,46 @@ canvas {
   display: block;
   width: 100%;
   height: 100%;
+}
+
+button {
+  opacity: 100% !important;
+  word-spacing: 8px;
+  text-shadow: 1px 1px 0px #1f1f1f;
+  font-size: 15px;
+  color: white;
+  margin-bottom: 15px;
+  border: none;
+  width: 500px;
+  height: 50px;
+  background: url(/assets/ui/gui/button.png);
+  background-size: 500px 50px;
+  font-family: 'Mojangles', sans-serif;
+  image-rendering: pixelated;
+}
+
+button::active {
+  border: none;
+  outline: none;
+}
+
+button:hover {
+  image-rendering: pixelated;
+  background: url(/assets/ui/gui/button_selected.png);
+  background-size: 500px 50px;
+  color: yellow;
+}
+
+.cursor {
+  z-index: 10000;
+  position: fixed;
+  background: url(/assets/ui/cursor.png);
+  background-size: 50px 50px;
+  left: 0;
+  top: 0;
+  width: 50px;
+  height: 50px;
+  pointer-events: none;
 }
 
 .overlay {
@@ -40,12 +84,34 @@ canvas {
   top: 0px;
   left: 0px;
   position: fixed;
-  background: rgb(54, 1, 1);
-  opacity: 90%;
+  background: url(/assets/ui/deathscreen/deathscreen.png);
   z-index: 100;
   width: 100%;
   height: 100%;
-  pointer-events: none;
+}
+
+.deathreason {
+  font-family: 'Mojangles', sans-serif;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%);
+  color: white;
+  font-size: 22px;
+}
+
+.respawn-button {
+  position: fixed;
+  top: calc(50% + 120px);
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.exit-game-button {
+  position: fixed;
+  top: calc(50% + 150px);
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 #coordinates {
@@ -62,6 +128,16 @@ canvas {
   font-family: 'Mojangles', sans-serif;
   position: absolute;
   top: 10px;
+  right: 10px;
+  color: white;
+  background: rgba(0, 0, 0, 0.5);
+  padding: 5px;
+}
+
+#cardinal-direction {
+  font-family: 'Mojangles', sans-serif;
+  position: absolute;
+  top: 30px;
   right: 10px;
   color: white;
   background: rgba(0, 0, 0, 0.5);
@@ -162,7 +238,6 @@ canvas {
   height: 50px;
   background-color: #ccc;
   margin-right: 5px;
-  cursor: pointer;
 }
 
 #items {
@@ -223,10 +298,10 @@ canvas {
   transform: translateX(-50%);
   color: #cae676;
   text-shadow: 
-    -1.5px -1.5px 0 #000,  
-    1.5px -1.5px 0 #000,
-    -1.5px 1.5px 0 #000,
-    1.5px 1.5px 0 #000;
+    -2px -2px 0 #000,  
+    2px -2px 0 #000,
+    -2px 2px 0 #000,
+    2px 2px 0 #000;
 }
 
 #health-bar-container {

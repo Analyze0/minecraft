@@ -96,24 +96,25 @@ const blockMaterials = {
     diamondBlock: diamondBlockTexture
 };
 
+
 function createStairGeometry() {
     const geometry = new THREE.BufferGeometry();
 
     const vertices = new Float32Array([
         // Lower step faces
-        0, 0, 0,  1, 0, 0,  1, 0.5, 0,  0, 0.5, 0,    // front
-        0, 0, 1,  1, 0, 1,  1, 0.5, 1,  0, 0.5, 1,    // back
-        0, 0, 0,  0, 0.5, 0,  0, 0.5, 1,  0, 0, 1,    // left
-        1, 0, 0,  1, 0.5, 0,  1, 0.5, 1,  1, 0, 1,    // right
-        0, 0.5, 0,  1, 0.5, 0,  1, 0.5, 1,  0, 0.5, 1,// top
-        0, 0, 0,  1, 0, 0,  1, 0, 1,  0, 0, 1,        // bottom
+        0, 0, 0,  1, 0, 0,  1, 0.5, 0,  0, 0.5, 0,    // front (0)
+        0, 0, 1,  1, 0, 1,  1, 0.5, 1,  0, 0.5, 1,    // back (1)
+        0, 0, 0,  0, 0.5, 0,  0, 0.5, 1,  0, 0, 1,    // left (2)
+        1, 0, 0,  1, 0.5, 0,  1, 0.5, 1,  1, 0, 1,    // right (3)
+        0, 0.5, 0,  1, 0.5, 0,  1, 0.5, 1,  0, 0.5, 1,// top (4)
+        0, 0, 0,  1, 0, 0,  1, 0, 1,  0, 0, 1,        // bottom (5)
 
         // Upper step faces
-        0, 0.5, 0.5,  1, 0.5, 0.5,  1, 1, 0.5,  0, 1, 0.5,   // front
-        0, 0.5, 1,    1, 0.5, 1,    1, 1, 1,    0, 1, 1,     // back
-        0, 0.5, 0.5,  0, 1, 0.5,    0, 1, 1,    0, 0.5, 1,   // left
-        1, 0.5, 0.5,  1, 1, 0.5,    1, 1, 1,    1, 0.5, 1,   // right
-        0, 1, 0.5,    1, 1, 0.5,    1, 1, 1,    0, 1, 1       // top
+        0, 0.5, 0.5,  1, 0.5, 0.5,  1, 1, 0.5,  0, 1, 0.5,   // front (6)
+        0, 0.5, 1,    1, 0.5, 1,    1, 1, 1,    0, 1, 1,     // back (7)
+        0, 0.5, 0.5,  0, 1, 0.5,    0, 1, 1,    0, 0.5, 1,   // left (8)
+        1, 0.5, 0.5,  1, 1, 0.5,    1, 1, 1,    1, 0.5, 1,   // right (9)
+        0, 1, 0.5,    1, 1, 0.5,    1, 1, 1,    0, 1, 1       // top (10)
     ]);
 
     for (let i = 0; i < vertices.length; i += 3) {
@@ -139,50 +140,41 @@ function createStairGeometry() {
         40,41,42, 40,42,43
     ];
 
- const uvs = [];
+    const uvs = [];
 
-for (let faceIndex = 0; faceIndex < 11; faceIndex++) {
-    let faceUVs;
+    for (let faceIndex = 0; faceIndex < 11; faceIndex++) {
+        let faceUVs;
 
-    const full = [1, 1, 0, 1, 0, 0, 1, 0];
-    const rotated = [1, 0, 1, 1, 0, 1, 0, 0];
-    const topHalf    = [0, 0.5, 1, 0.5, 1, 1, 0, 1];  // top of texture
+        switch (faceIndex) {
+            case 0: // Lower front
+            case 6: // Upper front
+                faceUVs = [0, 0, 1, 0, 1, 0.5, 0, 0.5];
+                break;
+            case 1: // Lower back
+            case 7: // Upper back
+                faceUVs = [0, 0, 1, 0, 1, 0.5, 0, 0.5]; 
+                break;
+            case 2: // Lower left
+            case 3: // Lower right
+            case 8: // Upper left
+            case 9: // Upper right
+                faceUVs = [1.0, 0.5, 1.0, 1.0, 0.5, 1.0, 0.5, 0.5];
+                break;
+            case 4: // Top of lower step
+                faceUVs = [1, 1, 0, 1, 0, 0, 1, 0];
+                break;
+            case 5: // Bottom of lower step
+                faceUVs = [0, 0, 1, 0, 1, 1, 0, 1];
+                break;
+            case 10: // Top of upper step
+                faceUVs = [1, 1, 0, 1, 0, 0.5, 1, 0.5];
+                break;
+            default:
+                faceUVs = [0, 0, 1, 0, 1, 1, 0, 1];
+        }
 
-
-
-    // ✅ FLIPPED vs previous attempt:
-    const topHalfRotated = [1, 1, 0, 1, 0, 0.5, 1, 0.5];
-const bottomHalfRotated = [1, 0.5, 0, 0.5, 0, 0, 1, 0];
-const fullHalfHeight = [0, 0, 1, 0, 1, 0.5, 0, 0.5];  // Only bottom 50%
-
-
-
-    switch (faceIndex) {
-        case 0: // Lower front
-        case 6: // Upper front
-            faceUVs = fullHalfHeight;
-            break;
-        case 2:
-        case 3:
-        case 8:
-        case 9:
-            faceUVs = rotated;
-            break;
-        // Top of lower step = left half
-        case 4:
-            faceUVs = full;
-            break;
-        // Top of upper step = right half
-        case 10:
-            faceUVs = topHalfRotated;
-            break;
-        default:
-            faceUVs = full;
+        uvs.push(...faceUVs);
     }
-
-    uvs.push(...faceUVs);
-}
-
 
     geometry.setAttribute('position', new THREE.BufferAttribute(vertices, 3));
     geometry.setAttribute('uv', new THREE.BufferAttribute(new Float32Array(uvs), 2));

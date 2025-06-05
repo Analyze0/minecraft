@@ -10,10 +10,15 @@ const inventory = {};
 
 scene.background = new THREE.Color(0xdcebf8);
 
+let username = "User";
+
 //Survival
 
 let maxHealth = 10; // # of full hearts displayed (e.g., 10 hearts total)
 let currentHealth = 15; // Internal health value (out of 20 half-hearts for 10 hearts)
+let alive = true;
+
+let deathreason = "";
 
 function getHealthRepresentation(healthValue) {
     let representation = "";
@@ -188,8 +193,28 @@ document.addEventListener('keyup', (event) => {
 const euler = new THREE.Euler(0, 0, 0, 'YXZ');
 const rotationSpeed = Math.PI / 1000;
 
+let direction = '';
+
 document.addEventListener('mousemove', (event) => {
+    document.getElementById('cursor').style.left = (event.clientX-25) + "px";
+    document.getElementById('cursor').style.top = (event.clientY-25) + "px";
     if (mouseLocked) {
+        const directionVector = new THREE.Vector3();
+        camera.getWorldDirection(directionVector);
+
+        const angle = Math.atan2(directionVector.x, directionVector.z);
+        const angleDegrees = angle * (180 / Math.PI);
+
+        if (angleDegrees >= -22.5 && angleDegrees < 22.5) {
+            direction = 'North';
+        } else if (angleDegrees >= 67.5 && angleDegrees < 112.5) {
+            direction = 'East';
+        } else if (angleDegrees >= 157.5 || angleDegrees < -157.5) {
+            direction = 'South';
+        } else if (angleDegrees >= -112.5 && angleDegrees < -67.5) {
+            direction = 'West';
+        }
+        document.getElementById('cardinal-direction').innerHTML = direction;
         const movementX = event.movementX || event.mozMovementX || event.webkitMovementX || 0;
         const movementY = event.movementY || event.mozMovementY || event.webkitMovementY || 0;
 
@@ -249,6 +274,8 @@ function handleMovement() {
 
     if (player.position.y < -10) {
         player.position.y = 60;
+        currentHealth = 0;
+        deathreason = "fell in the void";
     }
 
     handleCollisionDetection();
@@ -263,7 +290,7 @@ function handleMovement() {
             const distance = child.position.distanceTo(player.position);
             let isVisible;
             if (superflat == 'true') {
-                isVisible = distance < 12;
+                isVisible = distance < 13;
             } else {
                 isVisible = distance < 10;
             }
@@ -349,8 +376,25 @@ function handleCollisionDetection() {
     }
 }
 
-
 function animate() {
+    if(mouseLocked == true) {
+        document.getElementById('cursor').style.display = 'none';
+    } else {
+        document.getElementById('cursor').style.display = 'block';
+    }
+
+    updateHealthDisplay();
+    updateHungerDisplay();
+    if(currentHealth <= 0) {
+        if(alive == true) {
+            mouseLocked = false;
+            document.exitPointerLock();
+            document.getElementById('gameplay-ui').style.display = 'none';
+            document.getElementById('deathreason').innerHTML = username + ' ' + deathreason;
+            document.getElementById('deathscreen').style.display = 'block';
+        }
+        alive = false;
+    }
     calculateFPS(performance.now());
 
     requestAnimationFrame(animate);
@@ -755,13 +799,31 @@ function addBlock() {
     let block;
 
     if (holding === "oakStairs") {
-        const geometry = createStairGeometry();
-        const material = new THREE.MeshBasicMaterial({
-            map: textures.oakPlanks,
-            side: THREE.DoubleSide
-        });
-        block = new THREE.Mesh(geometry, material);
-    } else {
+                const geometry = createStairGeometry();
+                const material = new THREE.MeshBasicMaterial({
+                    map: textures.oakPlanks,
+                    side: THREE.DoubleSide
+                });
+                block = new THREE.Mesh(geometry, material);
+
+                let yaw = camera.rotation.y;
+let yawDegrees = (THREE.MathUtils.radToDeg(yaw) + 360) % 360;
+
+// Snap to nearest 90°
+let snappedYaw;
+if (yawDegrees >= 315 || yawDegrees < 45) {
+    snappedYaw = 180; // South
+} else if (yawDegrees >= 45 && yawDegrees < 135) {
+    snappedYaw = 270; // West
+} else if (yawDegrees >= -22.5 && yawDegrees < 22.5) {
+    alert('pp')
+} else {
+    snappedYaw = 90;  // East
+}
+
+block.rotation.y = THREE.MathUtils.degToRad(snappedYaw);
+
+            } else {
         const geometry = new THREE.BoxGeometry(1, 1, 1);
         const material = new THREE.MeshFaceMaterial(blockMaterials[holding]);
         block = new THREE.Mesh(geometry, material);
@@ -978,3 +1040,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
+//UI:
+
+document.getElementById('exit-game-button').onmousedown = function(e) {
+    window.location.href = "/index.html";
+}
